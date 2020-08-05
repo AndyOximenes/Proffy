@@ -2,44 +2,59 @@ import React from "react";
 
 import whatsappIcon from "../../assets/images/icons/whatsapp.svg";
 
+import api from "../../services/api";
+
 import "./styles.css";
 
-function TeacherItem() {
+export interface Teacher {
+  id: number;
+  avatar: string;
+  bio: string;
+  cost: number;
+  name: string;
+  subject: string;
+  whatsapp: string;
+}
+
+interface TeacherItemProps {
+  teacher: Teacher;
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+  function createNewConnection() {
+    api.post("connections", {
+      user_id: teacher.id,
+    });
+  }
+
   return (
     <article className="teacher-item">
       <header>
-        <img
-          src="https://avatars2.githubusercontent.com/u/52507064?s=460&u=04042d49a33cacd44c36bb760b7fc744d1d25a4e&v=4"
-          alt="Andy Silva"
-        />
-
+        <img src={teacher.avatar} alt={teacher.name} />
         <div>
-          <strong>Andy Silva</strong>
-          <span>História</span>
+          <strong>{teacher.name}</strong>
+          <span>{teacher.subject}</span>
         </div>
       </header>
 
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        <br /> <br />
-        Sed tristique, quam eu mattis mollis, nunc nunc consectetur libero, id
-        malesuada arcu magna nec arcu. Nullam faucibus eget sapien sit amet
-        tincidunt. Maecenas ornare urna ac libero dictum fermentum ac at sapien.
-        Vivamus auctor elit nec lectus malesuada aliquet.
-      </p>
+      <p>{teacher.bio}</p>
 
       <footer>
         <p>
           Preço/hora
-          <strong>R$ 75,00</strong>
+          <strong>R$ {teacher.cost}</strong>
         </p>
-        <button type="button">
+        <a
+          target="_blank"
+          onClick={createNewConnection}
+          href={`https://wa.me/${teacher.whatsapp}`}
+        >
           <img src={whatsappIcon} alt="Whatsapp" />
           Entrar em contato
-        </button>
+        </a>
       </footer>
     </article>
   );
-}
+};
 
 export default TeacherItem;
